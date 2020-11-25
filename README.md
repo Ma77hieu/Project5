@@ -6,7 +6,7 @@ Create a local database and store a defined number of aliments from a defined nu
 User possibilities:
 /- 1 Flush the database (used primarily for development purposes).
 /- 2 Find a substitute to an aliment
-/- 3 Display the substituted aliments
+/- 3 Display the substitutes to aliments that have been saved
 /- 4 Quit the program 
 
 Detailed scenario for "-/ 2 Find a substitute to an aliment"
