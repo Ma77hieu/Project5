@@ -1,6 +1,4 @@
 import sqlite3
-import json
-import request
 
 # a/Create database from SQL file
 connection = sqlite3.connect(
@@ -12,7 +10,7 @@ sql_file = open(
 sql_as_string = sql_file.read()
 cursor.executescript(sql_as_string)
 
-# b/Import data from the OFF databse
+# b/Import data from the OFF databse => see off_api.Py
 # c/Insert values in database
 cursor.execute("INSERT INTO aliments"
                "(name,nutrition_grade,stores,url,categories_id) "
