@@ -25,7 +25,7 @@ DROP TABLE IF EXISTS `categories` ;
 
 CREATE TABLE IF NOT EXISTS `categories` (
   `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 
-  `name` VARCHAR(70) NULL);
+  `name` VARCHAR(255) NULL);
 
 
 -- -----------------------------------------------------
