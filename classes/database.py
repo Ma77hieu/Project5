@@ -4,6 +4,7 @@ import mysql.connector
 import parameters.SQL_credentials as CRED
 import pprint
 import string
+import messages_displayed as MSG
 
 
 class Database ():
@@ -65,19 +66,38 @@ class Database ():
             #     print("retour {} ".format(
             #         row[0]))
             # print("retour:{}".format(retour))
-            id_alternative_product = str(cursor.fetchone())[1]
+            self.id_alternative_product = str(cursor.fetchone())[1]
             # print("id_alternative:{}".format(id_alternative_product))
             cursor.execute(
                 """SELECT id,name,nutrition_grade FROM aliments
-                WHERE id=%s """, (id_alternative_product,))
+                WHERE id=%s """, (self.id_alternative_product,))
             alt = cursor.fetchone()
             print("\n#####\n\nAlternative product found:\n ID | NAME | Nutriscore")
 
             print(" {} | {} | {} ".format(
                 alt[0], alt[1], alt[2]))
             # print("id alternative product:{}".format(id_alternative_product))
-
         self.connection.commit()
+
+    def save_alternative(self, prod_id, alt_id):
+        repeat = True
+        while repeat == True:
+            need_save = input(
+                "\nWould you like to save this alternative aliment?\n1.YES\n2.NO\n")
+            if need_save.isdigit():
+                if int(need_save) == 1:
+                    with self.connection.cursor(buffered=True) as cursor:
+                        cursor.execute(
+                            """INSERT INTO substituts (aliments_id,substitut_id)
+                            VALUES(%s,%s)""",  (prod_id, alt_id))
+                        print("Substitute SAVED")
+                    self.connection.commit()
+                if int(need_save) == 2:
+                    print("Substitute NOT saved")
+                repeat = False
+            else:
+                print("Wrong input, please type '1' or '2'\n")
+                pass
 
 
 if __name__ != "main":

@@ -42,6 +42,7 @@ class Menu:
                 # print("selected cat name:{}".format(selected_cat_name))
                 DB.find_better_nutri(
                     user_choice, self.selected_cat)
+                DB.save_alternative(user_choice, DB.id_alternative_product)
                 return_menu = True
             elif user_menu_choice == 2:
                 # display_alt()
