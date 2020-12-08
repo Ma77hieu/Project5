@@ -21,7 +21,7 @@ USE `substitution_aliments` ;
 
 -- -----------------------------------------------------
 -- Table `substitution_aliments`.`aliments`
--- -----------------------------------------------------
+-- -----------------------------------------------------+
 DROP TABLE IF EXISTS `substitution_aliments`.`aliments` ;
 
 CREATE TABLE IF NOT EXISTS `substitution_aliments`.`aliments` (

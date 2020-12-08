@@ -9,18 +9,21 @@ import database
 class Off_api_data():
 
     def __init__(self):
-        pass
-
-    def fetch_all_data(self):
         url_req_categories = (
             'https://fr.openfoodfacts.org/categories.json&limit='
             + str(CONST.NBR_CAT+1)
         )
-        categories = requests.get(url_req_categories)
-        categories_json = json.loads(categories.content.decode('utf-8'))
-        self.all_data = []
+        self.categories = requests.get(url_req_categories)
+
+    def fetch_data(self):
+        self.cat_list = []
         for each_cat in range(0, CONST.NBR_CAT):
+            print("loading CATEGORY {} ".format(each_cat+1))
+            categories_json = json.loads(
+                self.categories.content.decode('utf-8'))
             cat_name = categories_json["tags"][each_cat]["name"]
+            self.cat_list.append(cat_name)
+            # print("cat list:{}".format(self.cat_list))
             for each_product in range(0, CONST.NBR_PROD):
                 products_url = (
                     'https://fr.openfoodfacts.org/cgi/search.pl?action=process&tagtype_0=categories&tag_contains_0=contains&tag_0='
@@ -29,8 +32,10 @@ class Off_api_data():
                     + str(CONST.NBR_PROD)
                     + '&page=1'
                 )
+                # print(products_url)
                 products = requests.get(products_url)
                 products_json = json.loads(products.content.decode('utf-8'))
+                # print(products_json["products"])
                 product_name = products_json["products"][each_product]["product_name_fr"]
                 nutriscore = products_json["products"][each_product]["nutriscore_grade"]
                 stores = products_json["products"][each_product]["stores"]
@@ -42,6 +47,6 @@ class Off_api_data():
                                   stores, url, cat_name)
 
 
-if __name__ != "main":
-    data = Off_api_data()
-    data.fetch_all_data()
+# if __name__ != "main":
+#     data = Off_api_data()
+#     data.fetch_data()
