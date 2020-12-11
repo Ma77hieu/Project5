@@ -10,7 +10,7 @@ menu = ("\n###################\n"
         "###################\n\n"
         "1/ Find an alternative to a product\n"
         "2/ Display the saved alternatives\n"
-        "3/ Reset database\n"
+        "3/ Initialise or reset database\n"
         "4/ Exit\n")
 
 disclaimer = ("\nWelcome!\n\n"

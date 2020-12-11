@@ -1,66 +1,75 @@
 import messages_displayed as MSG
 from os import system
-import database
+from database import Database as DB
 import off_api
 import parameters.constants as CONST
 import time
+from user_inputs import User_inputs as check_input
 
 
 class Menu:
-    api = off_api.Off_api_data()
 
     def __init__(self):
         # system('cls')
-        if init == True:
-            print("Please wait while the required data is loaded")
-            DB = database.Database()
-            DB.load_sql_file()
-            self.api.fetch_data()
-            init == False
-            # print(MSG.disclaimer)
-            # print(MSG.menu)
-            # user_choice = self.ask_user_input_main_menu
-            # init == False
-        keep_run = True
-        return_menu = False
-        while keep_run == True:
-            if return_menu == True:
+        self.api = off_api.Off_api_data()
+        self.db = DB()
+        self.return_menu = False
+        self.keep_run = True
+        self.menu_launch()
+
+    def menu_launch(self):
+        if self.api.data_loaded == False:
+            print("\n##########\n\n"
+                  "No data have been retrieved,"
+                  "please use menu choice 3\n\n"
+                  "##########")
+        while self.keep_run == True:
+            if self.return_menu == True:
                 print("\nYou've been redirected to the main menu\n")
-            # if return_menu == False:
-            #     return_menu == True
             print(MSG.menu)
-            user_menu_choice = self.ask_user_input_main_menu()
-            if user_menu_choice == 1:
-                # self.api.fetch_data()
-                self.display_cat()
-                self.display_prod_from_cat()
-                DB.display_prod_from_cat(self.selected_cat)
-                user_choice = self.ask_user_input()
-                # print("selected_cat:{}".format(self.selected_cat))
-                # print("self.dict_cat:{}".format(self.dict_cat))
-                # selected_cat_name = self.dict_cat[user_choice]
-                # print("selected cat name:{}".format(selected_cat_name))
-                DB.find_better_nutri(
-                    user_choice, self.selected_cat)
-                DB.save_alternative(user_choice, DB.id_alternative_product)
-                return_menu = True
-            elif user_menu_choice == 2:
-                # display_alt()
-                print("\nyou selected {}\n".format(user_choice))
-                return_menu = True
-            elif user_menu_choice == 3:
-                print("\nBeginning reset process\n")
-                DB.load_sql_file()
-                self.api = off_api.Off_api_data()
-                self.api.fetch_data()
-                print("\nDatabase reset succesfull\n")
-                return_menu = True
-            elif user_menu_choice == 4:
-                keep_run = False
-            # if keep_run == True:
-            #     user_choice = self.ask_user_input()
+            self.user_menu_choice = self.ask_user_input_main_menu()
+            if self.user_menu_choice == 1 and self.api.data_loaded == True:
+                self.menu_1_alternative()
+            # elif self.user_menu_choice == 2: and (
+            #         (self.api.data_loaded == True) and (
+            #         self.db.alt_saved == True)):
+            elif self.user_menu_choice == 2 and self.api.data_loaded == True:
+                if self.db.alt_saved == True:
+                    self.menu_2_display_alt()
+                else:
+                    print(
+                        "You have to save alternative products before you can review them")
+            elif self.user_menu_choice == 3:
+                self.menu_3_load_db()
+            elif self.user_menu_choice == 4:
+                self.keep_run = False
+            else:
+                print("please initalise the database first, menu choice 3")
         print("Thank you, have a nice day!")
         quit()
+
+    def menu_1_alternative(self):
+        self.display_cat()
+        self.display_prod_from_cat(self.list_cat_nbr)
+        self.db.display_prod_from_cat(self.selected_cat)
+        self.select_prod_from_cat(self.db.selectionnable_prod)
+        self.db.find_better_nutri(
+            self.selected_prod, self.selected_cat)
+        self.db.save_alternative(
+            self.selected_prod, self.db.id_alternative_product)
+        self.return_menu = True
+
+    def menu_2_display_alt(self):
+        self.db.display_alternative()
+        self.return_menu = True
+
+    def menu_3_load_db(self):
+        print("\nBeginning loading data\n")
+        self.db.load_sql_file()
+        self.api.fetch_data()
+        print("\nDatabase loaded\n")
+        init == False
+        self.return_menu = True
 
     def ask_user_input_main_menu(self):
         user_input = input("\nPlease enter one of the line numbers "
@@ -88,16 +97,22 @@ class Menu:
         categories = self.api.cat_list
         i = 1
         self.dict_cat = {}
+        self.list_cat_nbr = []
         for cat in categories:
             add = {i: cat}
             self.dict_cat.update(add)
             print("\nCATEGORY {}: {}".format(i, cat))
+            self.list_cat_nbr.append(i)
             i = i+1
         return (self.dict_cat)
 
-    def display_prod_from_cat(self):
-        self.cat_selected_nbr = self.ask_user_input()
-        self.selected_cat = self.dict_cat[self.cat_selected_nbr]
+    def display_prod_from_cat(self, list_cat_nbr):
+        self.checked_input = check_input(self.list_cat_nbr)
+        self.selected_cat = self.dict_cat[self.checked_input.validated_input]
+
+    def select_prod_from_cat(self, selectionnable_prod):
+        self.checked_input = check_input(self.db.selectionnable_prod)
+        self.selected_prod = self.checked_input.validated_input
 
 
 if __name__ != "main":

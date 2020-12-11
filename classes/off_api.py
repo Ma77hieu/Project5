@@ -14,9 +14,11 @@ class Off_api_data():
             + str(CONST.NBR_CAT+1)
         )
         self.categories = requests.get(url_req_categories)
+        self.data_loaded = False
 
     def fetch_data(self):
         self.cat_list = []
+
         for each_cat in range(0, CONST.NBR_CAT):
             print("loading CATEGORY {} ".format(each_cat+1))
             categories_json = json.loads(
@@ -45,6 +47,7 @@ class Off_api_data():
                 DB = database.Database()
                 DB.insert_product(product_name, nutriscore,
                                   stores, url, cat_name)
+        self.data_loaded = True
 
 
 # if __name__ != "main":

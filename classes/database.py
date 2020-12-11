@@ -5,6 +5,7 @@ import parameters.SQL_credentials as CRED
 import pprint
 import string
 import messages_displayed as MSG
+from user_inputs import User_inputs as check_input
 
 
 class Database ():
@@ -13,9 +14,11 @@ class Database ():
 
         self.connection = mysql.connector.connect(
             host=CRED.host,
+            database='substitution_aliments',
             user=CRED.user,
             passwd=CRED.passwd
         )
+        self.alt_saved = False
 
     def load_sql_file(self):
         """
@@ -29,7 +32,7 @@ class Database ():
 
     def insert_product(self, product_name, nutrition_grade, stores, url, cat_name):
         with self.connection.cursor() as cursor:
-            cursor.execute("""USE substitution_aliments;""")
+            # cursor.execute("""USE substitution_aliments;""")
             cursor.execute("""INSERT INTO aliments
                     (name,nutrition_grade,stores,url,categories_id)
                     VALUES (%s,%s,%s,%s,%s)""", (product_name, nutrition_grade, stores, url, cat_name))
@@ -37,22 +40,25 @@ class Database ():
 
     def display_prod_from_cat(self, cat):
         with self.connection.cursor() as cursor:
-            cursor.execute("""USE substitution_aliments;""")
+            # cursor.execute("""USE substitution_aliments;""")
             cursor.execute(
                 """SELECT id,name,nutrition_grade FROM aliments
                 WHERE categories_id=%s""", (cat,))
             result = cursor.fetchall()
             print("\n#####\n\nProducts from the chosen category\n ID | NAME | Nutriscore")
+            self.selectionnable_prod = []
             for row in result:
                 print(" {} | {} | {} ".format(
                     row[0], row[1], row[2]))
+                self.selectionnable_prod.append(row[0])
+
             # pprint.pprint(result, indent=1)
         self.connection.commit()
 
     def find_better_nutri(self, id, cat_id):
         print("cat_id:{}".format(cat_id))
         with self.connection.cursor(buffered=True) as cursor:
-            cursor.execute("""USE substitution_aliments;""")
+            # cursor.execute("""USE substitution_aliments;""")
             cursor.execute(
                 """SELECT nutrition_grade FROM aliments
                 WHERE id=%s""", (id,))
@@ -82,22 +88,50 @@ class Database ():
     def save_alternative(self, prod_id, alt_id):
         repeat = True
         while repeat == True:
-            need_save = input(
+            print(
                 "\nWould you like to save this alternative aliment?\n1.YES\n2.NO\n")
-            if need_save.isdigit():
-                if int(need_save) == 1:
-                    with self.connection.cursor(buffered=True) as cursor:
-                        cursor.execute(
-                            """INSERT INTO substituts (aliments_id,substitut_id)
-                            VALUES(%s,%s)""",  (prod_id, alt_id))
-                        print("Substitute SAVED")
-                    self.connection.commit()
-                if int(need_save) == 2:
-                    print("Substitute NOT saved")
-                repeat = False
-            else:
-                print("Wrong input, please type '1' or '2'\n")
-                pass
+            checked_input = check_input([1, 2])
+            need_save = checked_input.validated_input
+            # if need_save.isdigit():
+            if need_save == 1:
+                with self.connection.cursor(buffered=True) as cursor:
+                    cursor.execute(
+                        """INSERT INTO substituts (aliments_id,substitut_id)
+                        VALUES(%s,%s)""",  (prod_id, alt_id))
+                    print("Substitute SAVED")
+                self.alt_saved = True
+                self.connection.commit()
+            if need_save == 2:
+                print("Substitute NOT saved")
+            repeat = False
+            # else:
+            #     print("Wrong input, please type '1' or '2'\n")
+            #     pass
+
+    def display_alternative(self):
+        with self.connection.cursor(buffered=True) as cursor:
+            cursor.execute(
+                """SELECT name,nutrition_grade,stores,categories_id,substitut_id
+                FROM aliments
+                RIGHT OUTER JOIN substituts 
+                ON aliments.id=substituts.aliments_id""")
+            all_info = cursor.fetchall()
+            # print(all_info)
+            for row in all_info:
+                prod_name = row[0]
+                print(
+                    "\n###\nYou replaced this product:\n\n{}\n\nwith:\n".format(prod_name))
+                substitut_id = row[4]
+                cursor.execute(
+                    """SELECT name,nutrition_grade,stores,categories_id
+                    FROM aliments
+                    WHERE id=%s""", (substitut_id,))
+                substitute_info = cursor.fetchone()
+                substitut_name = substitute_info[0]
+                print("{}\n###\n".format(substitut_name))
+                # print(substitute_info)
+
+        self.connection.commit()
 
 
 if __name__ != "main":
