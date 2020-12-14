@@ -46,10 +46,8 @@ class OffApiData():
                 )
                 products = requests.get(products_url)
                 products_json = json.loads(products.content.decode('utf-8'))
-                product_name = products_json(["products"]
-                                             [each_product]["product_name_fr"])
-                nutriscore = products_json(["products"]
-                                           [each_product]["nutriscore_grade"])
+                product_name = products_json["products"][each_product]["product_name_fr"]
+                nutriscore = products_json["products"][each_product]["nutriscore_grade"]
                 stores = products_json["products"][each_product]["stores"]
                 url = products_json["products"][each_product]["url"]
                 DB = classes.database.Database()

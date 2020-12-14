@@ -107,7 +107,7 @@ class Database ():
                     "\nThere are no products within the same"
                     " category with a better nutriscore in the extracted data")
             else:
-                self.id_alternative_product = int(str(cursor.fetchone())[1])
+                self.id_alternative_product = str(self.available_alt)[1]
                 cursor.execute(
                     """SELECT id,name,nutrition_grade FROM aliments
                     WHERE id=%s """, (self.id_alternative_product,))
@@ -132,7 +132,7 @@ class Database ():
         while repeat:
             print(
                 "\nWould you like to save this alternative aliment?"
-                "\n1.YES\n2.NO\n")
+                "\n1.YES\n2.NO")
             checked_input = check_input([1, 2])
             need_save = checked_input.validated_input
 
@@ -163,8 +163,8 @@ class Database ():
             for row in all_info:
                 prod_name = row[0]
                 print(
-                    "\n###\nYou replaced this product:"
-                    "\n\n{}\n\nwith:\n".format(prod_name))
+                    "\n######\nThe product:"
+                    "\n{}\ncan be replaced by:".format(prod_name))
                 substitut_id = row[4]
                 cursor.execute(
                     """SELECT name,nutrition_grade,stores,categories_id
@@ -172,7 +172,7 @@ class Database ():
                     WHERE id=%s""", (substitut_id,))
                 substitute_info = cursor.fetchone()
                 substitut_name = substitute_info[0]
-                print("{}\n###\n".format(substitut_name))
+                print("{}\n######".format(substitut_name))
 
         self.connection.commit()
 

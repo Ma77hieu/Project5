@@ -2,12 +2,13 @@
 Messages to be displayed to the user
 """
 
-BAD_INPUT = ("\nThe input you entered is not an integer.\n"
-             "Please use one of the listed numbers\n")
+BAD_INPUT = ("\n##########\nINFO:\n"
+             "The input you entered is not an integer.\n"
+             "Please use one of the listed numbers\n##########")
 
-MENU = ("\n###################\n"
-        "###### MENU #######\n"
-        "###################\n\n"
+MENU = ("\n###################################\n"
+        "############## MENU ###############\n"
+        "###################################\n\n"
         "1/ Find an alternative to a product\n"
         "2/ Display the saved alternatives\n"
         "3/ Initialise or reset database\n"
@@ -23,5 +24,6 @@ DISCLAIMER = ("\nWelcome!\n\n"
               "For more information please refer to:"
               " https://fr.openfoodfacts.org/\n")
 
-BAD_NUMBER_INPUT = ("\nThe number you entered is not in "
-                    "the above list, please try again.\n")
+BAD_NUMBER_INPUT = ("\n##########\nINFO:\n"
+                    "The number you entered is not in"
+                    "the above list, please try again.\n##########")

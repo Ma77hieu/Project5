@@ -32,14 +32,19 @@ class Menu:
         """
         Initializes the menu and execute actions based on user input
         """
+        print(MSG.DISCLAIMER)
         if not self.api.data_loaded:
-            print("\n##########\n\n"
-                  "No data have been retrieved,"
-                  "please use menu choice 3\n\n"
-                  "##########")
+            print("\n##########\nINFO:\n"
+                  "No data have been retrieved yet"
+                  " from the open food fact API.\n"
+                  "Please use menu choice 3 to initialize "
+                  "the database\n##########")
         while self.keep_run:
             if self.return_menu:
-                print("\nYou've been redirected to the main menu\n")
+                print("\nPress enter to be"
+                      " redirected to the main menu\n")
+                input()
+                self.cls()
             print(MSG.MENU)
             checked_input = check_input([1, 2, 3, 4])
             self.user_menu_choice = checked_input.validated_input

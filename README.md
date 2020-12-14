@@ -1,4 +1,24 @@
-Application scope:
+# Healthier alimentation products finder
+This application aims to help the user finds substitutes for all food related products. Based on a selection of product, this application will offer alternatives with a better nutrition grade (nutriscore in French). User ccan then decide to save this alternative (or not) and review the saved alternatives.
+##
+
+### *Requirements:* 
+Please refer to the requirement.txt file and the MySQL insatlaltion of this README
+### *MySQL installation:* 
+This application uses mySQL, in order to install it please visit: 
+https://dev.mysql.com/doc/mysql-installation-excerpt/5.7/en/
+### *Database connection parameters:*
+Regarding the connection to mySQL, please create a file named SqlCredentials.py inside the classes/parameters folder.
+You can then copy/paste the code inside exple-SqlCredentials.txt in your brand new SqlCredentials.py file and **update it with your specific host, user and password**.
+### *Parameters:* 
+You can change the number of categories and product per category you want inside the classes/parameters/constants.py file
+### *The open food fact initiative:* 
+For more information please refer to: https://fr.openfoodfacts.org/
+This application uses the open food fact API. 
+Open Food Facts is a non-profit project developed by thousands of volunteers from around the world.
+As the data comes from voluinteers, it might be incomplete and even sometimes not accurate, please use the information from this application with caution
+
+<!-- Application scope:
 Search for aliments in the OFF database (we will use the acronym OFF in this file to refer to Open Food Facts).
 Create a local database and store a defined number of aliments from a defined number of categories.(both those numbers being declared in the CONSTANT.py file).
 
@@ -18,7 +38,7 @@ The program then displays one of several potential subsitutes with a better nutr
 The user chooses one of the substitues.
 The application offers to save this substitute.
 The user chooses to save (or not).
-The application save (or not) the substitute inside a dedicated table of our database.
+The application save (or not) the substitute inside a dedicated table of our database. -->
 
 
 
