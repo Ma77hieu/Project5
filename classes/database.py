@@ -7,7 +7,7 @@ save a substitution product in the database
 """
 
 import mysql.connector
-import classes.parameters.SqlCredentials as CRED
+import classes.parameters.sqlCredentials as CRED
 from classes.user_inputs import UserInputs as check_input
 
 
@@ -89,13 +89,13 @@ class Database ():
          an alternative for
         cat_id -- Name of the category of the product
         """
-        print("cat_id:{}".format(cat_id))
+        print("Category: {}".format(cat_id))
         with self.connection.cursor(buffered=True) as cursor:
             cursor.execute(
                 """SELECT nutrition_grade FROM aliments
                 WHERE id=%s""", (prod_id,))
             nutri_chosen_product = str(cursor.fetchall())[3]
-            print("\nnutriscore chosen product:{}".format(
+            print("Nutriscore chosen product: {}".format(
                 nutri_chosen_product))
             cursor.execute(
                 """SELECT id FROM aliments
@@ -112,7 +112,7 @@ class Database ():
                     """SELECT id,name,nutrition_grade FROM aliments
                     WHERE id=%s """, (self.id_alternative_product,))
                 alt = cursor.fetchone()
-                print("\n#####\n\nAlternative product found:"
+                print("#####\nAlternative product found:"
                       "\n ID | NAME | Nutriscore")
                 print(" {} | {} | {} ".format(
                     alt[0], alt[1], alt[2]))
@@ -141,11 +141,13 @@ class Database ():
                     cursor.execute(
                         """INSERT INTO substituts (aliments_id,substitut_id)
                         VALUES(%s,%s)""",  (prod_id, alt_id))
-                    print("Substitute SAVED")
+                    print("\n##########\nINFO:\nSubstitute SAVED"
+                          "\n##########")
                 self.alt_saved = True
                 self.connection.commit()
             if need_save == 2:
-                print("Substitute NOT saved")
+                print("\n##########\nINFO:\nSubstitute NOT saved"
+                      "\n##########")
             repeat = False
 
     def display_alternative(self):

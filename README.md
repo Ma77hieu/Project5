@@ -8,8 +8,8 @@ Please refer to the requirement.txt file and the followinf section of this readm
 This application uses mySQL, in order to install it please visit: 
 https://dev.mysql.com/doc/mysql-installation-excerpt/5.7/en/
 ### *Database connection parameters:*
-Regarding the connection to mySQL, please create a file named SqlCredentials.py inside the classes/parameters folder.
-You can then copy/paste the code inside exple-SqlCredentials.txt in your brand new SqlCredentials.py file and **update it with your specific host, user and password**.
+Regarding the connection to mySQL, please create a file named sqlCredentials.py inside the classes/parameters folder.
+You can then copy/paste the code inside exple-sqlCredentials.txt in your brand new sqlCredentials.py file and **update it with your specific host, user and password**.
 ### *Parameters:* 
 You can change the number of categories and product per category you want inside the classes/parameters/constants.py file
 ### *The open food fact initiative:* 
