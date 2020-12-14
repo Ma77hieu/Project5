@@ -1,9 +1,9 @@
 # Healthier alimentation products finder
-This application aims to help the user finds substitutes for all food related products. Based on a selection of product, this application will offer alternatives with a better nutrition grade (nutriscore in French). User ccan then decide to save this alternative (or not) and review the saved alternatives.
+This application aims to help the user finds substitutes for all food related products. Based on a selection of product, this application will offer alternatives with a better nutrition grade (nutriscore in French). The user can then decide to save this alternative (or not) and review the saved alternatives.
 ##
 
 ### *Requirements:* 
-Please refer to the requirement.txt file and the MySQL insatlaltion of this README
+Please refer to the requirement.txt file and the followinf section of this readme: MySQL installation.
 ### *MySQL installation:* 
 This application uses mySQL, in order to install it please visit: 
 https://dev.mysql.com/doc/mysql-installation-excerpt/5.7/en/
@@ -16,7 +16,7 @@ You can change the number of categories and product per category you want inside
 For more information please refer to: https://fr.openfoodfacts.org/
 This application uses the open food fact API. 
 Open Food Facts is a non-profit project developed by thousands of volunteers from around the world.
-As the data comes from voluinteers, it might be incomplete and even sometimes not accurate, please use the information from this application with caution
+As the data comes from volunteers, it might be incomplete and even sometimes not accurate, please use the information from this application with caution.
 
 <!-- Application scope:
 Search for aliments in the OFF database (we will use the acronym OFF in this file to refer to Open Food Facts).
