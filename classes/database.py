@@ -39,7 +39,8 @@ class Database ():
                     pass
             self.connection.commit()
 
-    def insert_product(self, product_name, nutrition_grade, stores, url, cat_name):
+    def insert_product(self, product_name, nutrition_grade,
+                       stores, url, cat_name):
         """
         Save the products and their characteristics in DB
 
@@ -111,7 +112,8 @@ class Database ():
                     """SELECT id,name,nutrition_grade FROM aliments
                     WHERE id=%s """, (self.id_alternative_product,))
                 alt = cursor.fetchone()
-                print("\n#####\n\nAlternative product found:\n ID | NAME | Nutriscore")
+                print("\n#####\n\nAlternative product found:"
+                      "\n ID | NAME | Nutriscore")
                 print(" {} | {} | {} ".format(
                     alt[0], alt[1], alt[2]))
 
@@ -129,7 +131,8 @@ class Database ():
         repeat = True
         while repeat:
             print(
-                "\nWould you like to save this alternative aliment?\n1.YES\n2.NO\n")
+                "\nWould you like to save this alternative aliment?"
+                "\n1.YES\n2.NO\n")
             checked_input = check_input([1, 2])
             need_save = checked_input.validated_input
 
@@ -147,7 +150,8 @@ class Database ():
 
     def display_alternative(self):
         """
-        Display the products from the same category with a better nutrition grade
+        Display the products from the same category
+         with a better nutrition grade
         """
         with self.connection.cursor(buffered=True) as cursor:
             cursor.execute(
@@ -159,7 +163,8 @@ class Database ():
             for row in all_info:
                 prod_name = row[0]
                 print(
-                    "\n###\nYou replaced this product:\n\n{}\n\nwith:\n".format(prod_name))
+                    "\n###\nYou replaced this product:"
+                    "\n\n{}\n\nwith:\n".format(prod_name))
                 substitut_id = row[4]
                 cursor.execute(
                     """SELECT name,nutrition_grade,stores,categories_id

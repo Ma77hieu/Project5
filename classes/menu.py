@@ -50,7 +50,8 @@ class Menu:
                     self.menu_2_display_alt()
                 else:
                     print(
-                        "You have to save alternative products before you can review them")
+                        "You have to save alternative products "
+                        "before you can review them")
             elif self.user_menu_choice == 3:
                 self.menu_3_load_db()
             elif self.user_menu_choice == 4:
