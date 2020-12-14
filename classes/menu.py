@@ -1,3 +1,7 @@
+"""
+The menu of this program
+"""
+
 import os
 import sys
 import classes.messages_displayed as MSG

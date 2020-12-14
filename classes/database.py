@@ -1,3 +1,11 @@
+"""
+Creation of the database plus various operations like
+inserting a product
+display of the products of a category
+find a product with a better nutriscore
+save a substitution product in the database
+"""
+
 import mysql.connector
 import classes.parameters.SqlCredentials as CRED
 from classes.user_inputs import UserInputs as check_input

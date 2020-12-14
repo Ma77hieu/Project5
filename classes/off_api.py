@@ -1,3 +1,7 @@
+"""
+Extraction of the data from the Open food fact (OFF) API
+"""
+
 import json
 import requests
 import classes.parameters.constants as CONST
@@ -7,7 +11,7 @@ import classes.database
 class OffApiData():
 
     """
-    The class representing the data extracted from the OFF API
+    This class represents the data extracted from the OFF API
     """
 
     def __init__(self):

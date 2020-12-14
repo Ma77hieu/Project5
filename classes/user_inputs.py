@@ -1,3 +1,8 @@
+"""
+Used to ask for the user input and check if the input
+is within the list of acceptable inputs
+"""
+
 import classes.messages_displayed as MSG
 
 
