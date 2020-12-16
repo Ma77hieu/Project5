@@ -3,13 +3,24 @@ This application aims to help the user finds substitutes for all food related pr
 ##
 
 ### *Requirements:* 
-Please refer to the requirement.txt file and the followinf section of this readme: MySQL installation.
+Please refer to the requirement.txt file.
+
+## *Installation process:*
 ### *MySQL installation:* 
 This application uses mySQL, in order to install it please visit: 
 https://dev.mysql.com/doc/mysql-installation-excerpt/5.7/en/
+### *Create your virtual environment (windows):* 
+please write inside your python terminal the following command:
+
+    pip install venv
+
+then:
+
+    venv /path/to/new/virtual/environment
+
 ### *Database connection parameters:*
-Regarding the connection to mySQL, please create a file named sqlCredentials.py inside the classes/parameters folder.
-You can then copy/paste the code inside exple-sqlCredentials.txt in your brand new sqlCredentials.py file and **update it with your specific host, user and password**.
+Regarding the connection to mySQL, please go to the parameters folders and rename the file named connexion.example.py in connexion.py.
+**Please update it with your specific host, user and password**.
 ### *Parameters:* 
 You can change the number of categories and product per category you want inside the classes/parameters/constants.py file
 ### *The open food fact initiative:* 

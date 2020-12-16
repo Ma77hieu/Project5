@@ -2,7 +2,8 @@
 Constants that can be changed for mroe or less data
 retrieved from the OFF API
 """
+# Number of categories to be extracted from API, Default is 3
+NBR_CAT = 3
 
-NBR_CAT = 3  # Number of categories to be extracted from API
-NBR_PROD = 3  # Number of product per category to be extracted from API
-MAX_PROD_ID = NBR_CAT*NBR_PROD
+# Number of product per category to be extracted from API, Default is 50
+NBR_PROD = 3

@@ -4,8 +4,11 @@ The menu of this program
 
 import os
 import sys
-import classes.messages_displayed as MSG
+from classes.parameters.messages import DISCLAIMER, MENU
 from classes.database import Database as DB
+from classes.category import Category
+from classes.product import Product
+from classes.substitute import Substitute
 import classes.off_api
 from classes.user_inputs import UserInputs as check_input
 
@@ -19,6 +22,9 @@ class Menu:
         self.cls()
         self.api = classes.off_api.OffApiData()
         self.db = DB()
+        self.category = Category()
+        self.product = Product()
+        self.substitute = Substitute()
         self.return_menu = False
         self.keep_run = True
         self.menu_launch()
@@ -32,7 +38,7 @@ class Menu:
         """
         Initializes the menu and execute actions based on user input
         """
-        print(MSG.DISCLAIMER)
+        print(DISCLAIMER)
         if not self.api.data_loaded:
             print("\n##########\nINFO:\n"
                   "No data have been retrieved yet"
@@ -45,13 +51,13 @@ class Menu:
                       " redirected to the main menu\n")
                 input()
                 self.cls()
-            print(MSG.MENU)
+            print(MENU)
             checked_input = check_input([1, 2, 3, 4])
             self.user_menu_choice = checked_input.validated_input
             if self.user_menu_choice == 1 and self.api.data_loaded:
                 self.menu_1_alternative()
             elif self.user_menu_choice == 2 and self.api.data_loaded:
-                if self.db.alt_saved:
+                if self.substitute.alt_saved:
                     self.menu_2_display_alt()
                 else:
                     print(
@@ -71,22 +77,24 @@ class Menu:
         Menu choice 1: find an alternative with a
         better nutrition grade and save it in DB
         """
-        self.display_cat()
-        self.display_prod_from_cat()
-        self.db.display_prod_from_cat(self.selected_cat)
-        self.select_prod_from_cat()
-        self.db.find_better_nutri(
-            self.selected_prod, self.selected_cat)
-        if self.db.available_alt is not None:
-            self.db.save_alternative(
-                self.selected_prod, self.db.id_alternative_product)
+        self.category.display_categories()
+        self.category.ask_choose_cat()
+        self.category.display_prod_from_cat(self.category.selected_cat_name)
+        # self.db.display_prod_from_cat(self.selected_cat)
+        # self.select_prod_from_cat()
+        self.product.ask_choose_prod(self.category.selectionnable_prod)
+        self.product.find_better_nutri(
+            self.product.selected_prod_id, self.category.selected_cat_name)
+        if self.product.available_alt is not None:
+            self.substitute.save_alternative(
+                self.product.selected_prod_id, self.product.id_alternative_product)
         self.return_menu = True
 
     def menu_2_display_alt(self):
         """
         Menu choice 2: Display the saved alternatives
         """
-        self.db.display_alternative()
+        self.substitute.display_alternative()
         self.return_menu = True
 
     def menu_3_load_db(self):
@@ -95,7 +103,7 @@ class Menu:
         """
         print("\nBeginning loading data\n")
         self.db.load_sql_file()
-        self.api.fetch_data()
+        self.api.get_info()
         print("\nDatabase loaded\n")
         self.return_menu = True
 
@@ -123,7 +131,7 @@ class Menu:
         list_cat_nbr -- number corresponding to the chosen category
         (assigned by the "fetch data" function of the off_api module)
         """
-        self.checked_input = check_input(self.list_cat_nbr)
+        self.checked_input = check_input(self.category.list_cat_ids)
         self.selected_cat = self.dict_cat[self.checked_input.validated_input]
 
     def select_prod_from_cat(self):
@@ -137,7 +145,8 @@ class Menu:
         self.checked_input = check_input(self.db.selectionnable_prod)
         self.selected_prod = self.checked_input.validated_input
 
-    def cls(self):
+    @staticmethod
+    def cls():
         """
         Used to clear the screen of the terminal
         """

@@ -7,22 +7,22 @@ save a substitution product in the database
 """
 
 import mysql.connector
-import classes.parameters.sqlCredentials as CRED
+from classes.parameters.connexion import HOST, DATABASE, USER, PASSWD
 from classes.user_inputs import UserInputs as check_input
 
 
 class Database ():
     """
-    The class represeintg our database
+    The class representing our database
     """
 
     def __init__(self):
 
         self.connection = mysql.connector.connect(
-            host=CRED.HOST,
-            database=CRED.DATABASE,
-            user=CRED.USER,
-            passwd=CRED.PASSWD
+            host=HOST,
+            database=DATABASE,
+            user=USER,
+            passwd=PASSWD
         )
         self.alt_saved = False
         self.selectionnable_prod = []
@@ -39,18 +39,14 @@ class Database ():
                     pass
             self.connection.commit()
 
+    def insert_cat(self, cat_name):
+        with self.connection.cursor() as cursor:
+            cursor.execute(
+                """INSERT INTO categories (name) VALUES (%s)""", (cat_name,))
+        self.connection.commit()
+
     def insert_product(self, product_name, nutrition_grade,
                        stores, url, cat_name):
-        """
-        Save the products and their characteristics in DB
-
-        Keyword arguments:
-        product_name -- Name of the product to be inserted in DB
-        nutrition_grade -- Nutrition grade of the product
-        stores -- stores where user can buy the product
-        url -- url of the open food fact webpage of the product
-        cat_name -- name of the category related to the product
-        """
         with self.connection.cursor() as cursor:
             cursor.execute("""INSERT INTO aliments
                     (name,nutrition_grade,stores,url,categories_id)
@@ -119,64 +115,64 @@ class Database ():
 
         self.connection.commit()
 
-    def save_alternative(self, prod_id, alt_id):
-        """
-        Save a product inside the substituts table of our DB
+    # def save_alternative(self, prod_id, alt_id):
+    #     """
+    #     Save a product inside the substituts table of our DB
 
-        Keyword arguments:
-        prod_id -- Id of the product the user wishes to find
-        an alternative for
-        alt_id -- Id of the altenrative product
-        """
-        repeat = True
-        while repeat:
-            print(
-                "\nWould you like to save this alternative aliment?"
-                "\n1.YES\n2.NO")
-            checked_input = check_input([1, 2])
-            need_save = checked_input.validated_input
+    #     Keyword arguments:
+    #     prod_id -- Id of the product the user wishes to find
+    #     an alternative for
+    #     alt_id -- Id of the altenrative product
+    #     """
+    #     repeat = True
+    #     while repeat:
+    #         print(
+    #             "\nWould you like to save this alternative aliment?"
+    #             "\n1.YES\n2.NO")
+    #         checked_input = check_input([1, 2])
+    #         need_save = checked_input.validated_input
 
-            if need_save == 1:
-                with self.connection.cursor(buffered=True) as cursor:
-                    cursor.execute(
-                        """INSERT INTO substituts (aliments_id,substitut_id)
-                        VALUES(%s,%s)""",  (prod_id, alt_id))
-                    print("\n##########\nINFO:\nSubstitute SAVED"
-                          "\n##########")
-                self.alt_saved = True
-                self.connection.commit()
-            if need_save == 2:
-                print("\n##########\nINFO:\nSubstitute NOT saved"
-                      "\n##########")
-            repeat = False
+    #         if need_save == 1:
+    #             with self.connection.cursor(buffered=True) as cursor:
+    #                 cursor.execute(
+    #                     """INSERT INTO substituts (aliments_id,substitut_id)
+    #                     VALUES(%s,%s)""",  (prod_id, alt_id))
+    #                 print("\n##########\nINFO:\nSubstitute SAVED"
+    #                       "\n##########")
+    #             self.alt_saved = True
+    #             self.connection.commit()
+    #         if need_save == 2:
+    #             print("\n##########\nINFO:\nSubstitute NOT saved"
+    #                   "\n##########")
+    #         repeat = False
 
-    def display_alternative(self):
-        """
-        Display the products from the same category
-         with a better nutrition grade
-        """
-        with self.connection.cursor(buffered=True) as cursor:
-            cursor.execute(
-                """SELECT name,nutrition_grade,stores,categories_id,substitut_id
-                FROM aliments
-                RIGHT OUTER JOIN substituts
-                ON aliments.id=substituts.aliments_id""")
-            all_info = cursor.fetchall()
-            for row in all_info:
-                prod_name = row[0]
-                print(
-                    "\n######\nThe product:"
-                    "\n{}\ncan be replaced by:".format(prod_name))
-                substitut_id = row[4]
-                cursor.execute(
-                    """SELECT name,nutrition_grade,stores,categories_id
-                    FROM aliments
-                    WHERE id=%s""", (substitut_id,))
-                substitute_info = cursor.fetchone()
-                substitut_name = substitute_info[0]
-                print("{}\n######".format(substitut_name))
+    # def display_alternative(self):
+    #     """
+    #     Display the products from the same category
+    #      with a better nutrition grade
+    #     """
+    #     with self.connection.cursor(buffered=True) as cursor:
+    #         cursor.execute(
+    #             """SELECT name,nutrition_grade,stores,categories_id,substitut_id
+    #             FROM aliments
+    #             RIGHT OUTER JOIN substituts
+    #             ON aliments.id=substituts.aliments_id""")
+    #         all_info = cursor.fetchall()
+    #         for row in all_info:
+    #             prod_name = row[0]
+    #             print(
+    #                 "\n######\nThe product:"
+    #                 "\n{}\ncan be replaced by:".format(prod_name))
+    #             substitut_id = row[4]
+    #             cursor.execute(
+    #                 """SELECT name,nutrition_grade,stores,categories_id
+    #                 FROM aliments
+    #                 WHERE id=%s""", (substitut_id,))
+    #             substitute_info = cursor.fetchone()
+    #             substitut_name = substitute_info[0]
+    #             print("{}\n######".format(substitut_name))
 
-        self.connection.commit()
+    #     self.connection.commit()
 
 
 if __name__ == "__main__":

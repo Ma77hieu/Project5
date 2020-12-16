@@ -3,7 +3,7 @@ Used to ask for the user input and check if the input
 is within the list of acceptable inputs
 """
 
-import classes.messages_displayed as MSG
+from classes.parameters.messages import BAD_INPUT, BAD_NUMBER_INPUT
 
 
 class UserInputs():
@@ -32,9 +32,9 @@ class UserInputs():
                 self.correct_input = True
                 self.validated_input = int(self.user_input)
             else:
-                print(MSG.BAD_NUMBER_INPUT)
+                print(BAD_NUMBER_INPUT)
         else:
-            print(MSG.BAD_INPUT)
+            print(BAD_INPUT)
 
 
 if __name__ == "__main__":
