@@ -1,15 +1,17 @@
-# from model import Model
 from classes.category import Category
 from classes.database import Database
 from classes.user_inputs import UserInputs as check_input
 
 
 class Product():
+    """
+    The class representing a food product, corresponding to
+    the table aliments in our database
+    """
 
-    def __init__(self, product_id=None, product_name=None, nutrition_grade=None,
-                 stores=None, url=None, cat_name=None, ):
-        # check la syntaxe du super_init
-        # super.__init__(self)
+    def __init__(self, product_id=None, product_name=None,
+                 nutrition_grade=None, stores=None, url=None,
+                 cat_name=None, ):
         self.database = Database()
         self.product_id = product_id
         self.product_name = product_name
@@ -18,10 +20,17 @@ class Product():
         self.url = url
         self.cat_name = cat_name
         self.category = Category()
+        self.data_loaded = None
+        self.checked_input = None
+        self.selected_prod_id = None
+        self.available_alt = None
+        self.id_alternative_product = None
 
     def insert_product(self, product_name, nutrition_grade,
                        stores, url, cat_name):
-        # exécuter ici directement la requête d'insertion grâce a l'objet Database()
+        """
+        Insert one new line in aliments table of the database
+        """
         with self.database.connection.cursor() as cursor:
             cursor.execute("""INSERT INTO aliments
                     (name,nutrition_grade,stores,url,categories_id)
@@ -38,19 +47,6 @@ class Product():
         self.checked_input = check_input(selectionnable_prod)
         self.selected_prod_id = self.checked_input.validated_input
 
-    # def display_prod(self, cat_name):
-    #     with self.database.connection.cursor(buffered=True) as cursor:
-    #         cursor.execute(
-    #             """SELECT id, name, nutrition_grade FROM aliments
-    #             WHERE categories_id=%s""", (cat_name)
-    #             )
-    #         result = cursor.fetchall()
-    #         for row in result:
-    #             print(" CATEGORY {} : {} ".format(
-    #                 row[0], row[1]))
-    #             self.list_cat_ids.append(row[0])
-    #     self.database.connection.commit()
-
     def find_better_nutri(self, prod_id, cat_id):
         """
         Find a product from the same category with a better nutrition grade
@@ -60,7 +56,6 @@ class Product():
          an alternative for
         cat_id -- Name of the category of the product
         """
-        print("Category: {}".format(cat_id))
         with self.database.connection.cursor(buffered=True) as cursor:
             cursor.execute(
                 """SELECT nutrition_grade FROM aliments
@@ -80,11 +75,11 @@ class Product():
             else:
                 self.id_alternative_product = str(self.available_alt)[1]
                 cursor.execute(
-                    """SELECT id,name,nutrition_grade FROM aliments
+                    """SELECT id,name,nutrition_grade,stores,url FROM aliments
                     WHERE id=%s """, (self.id_alternative_product,))
                 alt = cursor.fetchone()
                 print("#####\nAlternative product found:"
-                      "\n ID | NAME | Nutriscore")
-                print(" {} | {} | {} ".format(
-                    alt[0], alt[1], alt[2]))
+                      "\n ID | NAME | Nutriscore | store | url")
+                print(" {} | {} | {} | {} | {} ".format(
+                    alt[0], alt[1], alt[2], alt[3], alt[4]))
         self.database.connection.commit()

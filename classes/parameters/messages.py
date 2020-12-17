@@ -25,5 +25,24 @@ DISCLAIMER = ("\nWelcome!\n\n"
               " https://fr.openfoodfacts.org/\n")
 
 BAD_NUMBER_INPUT = ("\n##########\nINFO:\n"
-                    "The number you entered is not in"
+                    "The number you entered is not in "
                     "the above list, please try again.\n##########")
+
+INIT_NO_LOAD = ("\n##########\nINFO:\n"
+                "No data have been retrieved yet"
+                " from the open food fact API.\n"
+                "Please use menu choice 3 to initialize "
+                "the database\n##########")
+
+LOAD_FIRST = ("\n##########\nINFO:\n"
+              "Please initalise the database first, menu choice 3\n"
+              "##########")
+
+SAVE_ALT_FIRST = ("\n##########\nINFO:\n"
+                  "You have to save alternative products "
+                  "before you can review them\n"
+                  "##########")
+
+MENU_RETURN = ("\n##########\nINFO:\n"
+               "Press enter to be redirected to the main menu\n"
+               "##########")

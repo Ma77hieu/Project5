@@ -1,26 +1,20 @@
-# from model import Model
 from classes.database import Database
 from classes.product import Product
 from classes.category import Category
 from classes.user_inputs import UserInputs as check_input
 
 
-# class Substitute(Model):
-#     def __init__(self, product, substitute):
-#         """
-#         tu passes ici directement les objets
-#         product = Product()
-#         substitute = Product()
-#         """
-#         # check la syntaxe du super_init
-#         super.__init__(self)
-#         self.product = product
-#         self.substitute = substitute
 class Substitute():
+    """
+    The class representing a substitute to a food product,
+    corresponding to the table substituts in our database
+    """
+
     def __init__(self):
         self.database = Database()
         self.product = Product()
         self.category = Category()
+        self.alt_saved = None
 
     def save_alternative(self, prod_id, alt_id):
         """
@@ -43,7 +37,7 @@ class Substitute():
                 with self.database.connection.cursor(buffered=True) as cursor:
                     cursor.execute(
                         """INSERT INTO substituts (aliments_id,substitut_id)
-                        VALUES(%s,%s)""",  (prod_id, alt_id))
+                        VALUES(%s,%s)""", (prod_id, alt_id))
                     print("\n##########\nINFO:\nSubstitute SAVED"
                           "\n##########")
                 self.alt_saved = True

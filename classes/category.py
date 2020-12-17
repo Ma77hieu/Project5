@@ -1,26 +1,28 @@
-from classes.model import Model
 from classes.database import Database
 from classes.user_inputs import UserInputs as check_input
 
 
-# class Category(Model):
-
-#     def __init__(self, category_id=None, name):
-#         # check la syntaxe du super_init
-#         super.__init__()
-#         self.category_id = category_id
-#         self.name = name
-
-
 class Category():
+    """
+    The class representing a category of food product in
+    the open food fact database.
+    It corresponds to the table categories in our database
+    """
+
     def __init__(self):
         self.database = Database()
         self.cat_name = str
-
         self.list_cat_ids = []
         self.list_cat_names = []
+        self.checked_input = None
+        self.selected_cat_id = None
+        self.selected_cat_name = None
+        self.selectionnable_prod = None
 
     def insert_cat(self, cat_name):
+        """
+        Insert one new line in categories table of the database
+        """
         with self.database.connection.cursor() as cursor:
             cursor.execute(
                 """INSERT INTO categories (name) VALUES (%s)""", (cat_name,))
@@ -80,4 +82,3 @@ class Category():
                     row[0], row[1], row[2]))
                 self.selectionnable_prod.append(row[0])
         self.database.connection.commit()
-        print("selectionnable IDs:{}".format(self.selectionnable_prod))

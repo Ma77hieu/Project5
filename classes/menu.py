@@ -4,12 +4,14 @@ The menu of this program
 
 import os
 import sys
-from classes.parameters.messages import DISCLAIMER, MENU
+from classes.parameters.messages import (DISCLAIMER, MENU,
+                                         INIT_NO_LOAD, LOAD_FIRST,
+                                         SAVE_ALT_FIRST, MENU_RETURN)
 from classes.database import Database as DB
 from classes.category import Category
 from classes.product import Product
 from classes.substitute import Substitute
-import classes.off_api
+from classes.off_api import OffApiData
 from classes.user_inputs import UserInputs as check_input
 
 
@@ -20,8 +22,8 @@ class Menu:
 
     def __init__(self):
         self.cls()
-        self.api = classes.off_api.OffApiData()
-        self.db = DB()
+        self.api = OffApiData()
+        self.database = DB()
         self.category = Category()
         self.product = Product()
         self.substitute = Substitute()
@@ -40,15 +42,10 @@ class Menu:
         """
         print(DISCLAIMER)
         if not self.api.data_loaded:
-            print("\n##########\nINFO:\n"
-                  "No data have been retrieved yet"
-                  " from the open food fact API.\n"
-                  "Please use menu choice 3 to initialize "
-                  "the database\n##########")
+            print(INIT_NO_LOAD)
         while self.keep_run:
             if self.return_menu:
-                print("\nPress enter to be"
-                      " redirected to the main menu\n")
+                print(MENU_RETURN)
                 input()
                 self.cls()
             print(MENU)
@@ -60,15 +57,13 @@ class Menu:
                 if self.substitute.alt_saved:
                     self.menu_2_display_alt()
                 else:
-                    print(
-                        "You have to save alternative products "
-                        "before you can review them")
+                    print(SAVE_ALT_FIRST)
             elif self.user_menu_choice == 3:
                 self.menu_3_load_db()
             elif self.user_menu_choice == 4:
                 self.keep_run = False
             else:
-                print("\nPlease initalise the database first, menu choice 3")
+                print(LOAD_FIRST)
         print("Thank you, have a nice day!")
         sys.exit()
 
@@ -78,16 +73,17 @@ class Menu:
         better nutrition grade and save it in DB
         """
         self.category.display_categories()
+        print("\nPlease choose one category of product to find a substitute")
         self.category.ask_choose_cat()
         self.category.display_prod_from_cat(self.category.selected_cat_name)
-        # self.db.display_prod_from_cat(self.selected_cat)
-        # self.select_prod_from_cat()
+        print("Please choose one product you wish to replace.")
         self.product.ask_choose_prod(self.category.selectionnable_prod)
         self.product.find_better_nutri(
             self.product.selected_prod_id, self.category.selected_cat_name)
         if self.product.available_alt is not None:
             self.substitute.save_alternative(
-                self.product.selected_prod_id, self.product.id_alternative_product)
+                self.product.selected_prod_id,
+                self.product.id_alternative_product)
         self.return_menu = True
 
     def menu_2_display_alt(self):
@@ -102,48 +98,10 @@ class Menu:
         Menu choice 3: Load or reset the database
         """
         print("\nBeginning loading data\n")
-        self.db.load_sql_file()
+        self.database.load_sql_file()
         self.api.get_info()
         print("\nDatabase loaded\n")
         self.return_menu = True
-
-    def display_cat(self):
-        """
-        Display the name of the category received from the API
-        """
-        categories = self.api.cat_list
-        i = 1
-        self.dict_cat = {}
-        self.list_cat_nbr = []
-        for cat in categories:
-            add = {i: cat}
-            self.dict_cat.update(add)
-            print("\nCATEGORY {}: {}".format(i, cat))
-            self.list_cat_nbr.append(i)
-            i = i+1
-        return self.dict_cat
-
-    def display_prod_from_cat(self):
-        """
-        Display the products from a defined category
-
-        Keyword arguments:
-        list_cat_nbr -- number corresponding to the chosen category
-        (assigned by the "fetch data" function of the off_api module)
-        """
-        self.checked_input = check_input(self.category.list_cat_ids)
-        self.selected_cat = self.dict_cat[self.checked_input.validated_input]
-
-    def select_prod_from_cat(self):
-        """
-        User selection of one of the product of the category
-
-        Keyword arguments:
-        selectionnable_prod -- list of the products ID corresponding to
-        the selected category
-        """
-        self.checked_input = check_input(self.db.selectionnable_prod)
-        self.selected_prod = self.checked_input.validated_input
 
     @staticmethod
     def cls():
