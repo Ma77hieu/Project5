@@ -31,12 +31,15 @@ class Product():
         """
         Insert one new line in aliments table of the database
         """
-        with self.database.connection.cursor() as cursor:
+        with self.database.connection.cursor(buffered=True) as cursor:
+            cursor.execute("""SELECT id from categories
+                    WHERE name=%s""", (cat_name,))
+            cat_id = cursor.fetchone()[0]
             cursor.execute("""INSERT INTO aliments
                     (name,nutrition_grade,stores,url,categories_id)
                     VALUES (%s,%s,%s,%s,%s)""",
                            (product_name, nutrition_grade,
-                            stores, url, cat_name))
+                            stores, url, cat_id))
         self.database.connection.commit()
         self.data_loaded = True
 
