@@ -70,10 +70,13 @@ class Category():
         (assigned by the "fetch data" function of the off_api module)
         """
         self.selectionnable_prod = []
-        with self.database.connection.cursor() as cursor:
+        with self.database.connection.cursor(buffered=True) as cursor:
+            cursor.execute("""SELECT id from categories 
+            WHERE name=%s""", (cat_name,))
+            cat_id = cursor.fetchone()[0]
             cursor.execute(
                 """SELECT id,name,nutrition_grade FROM aliments
-                WHERE categories_id=%s""", (cat_name,))
+                WHERE categories_id=%s""", (cat_id,))
             result = cursor.fetchall()
             print("\n#####\n\nProducts from the chosen category\n"
                   " ID | NAME | Nutriscore")

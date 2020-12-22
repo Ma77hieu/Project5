@@ -50,7 +50,7 @@ class Product():
         self.checked_input = check_input(selectionnable_prod)
         self.selected_prod_id = self.checked_input.validated_input
 
-    def find_better_nutri(self, prod_id, cat_id):
+    def find_better_nutri(self, prod_id, cat_name):
         """
         Find a product from the same category with a better nutrition grade
 
@@ -60,6 +60,9 @@ class Product():
         cat_id -- Name of the category of the product
         """
         with self.database.connection.cursor(buffered=True) as cursor:
+            cursor.execute("""SELECT id from categories
+                    WHERE name=%s""", (cat_name,))
+            cat_id = cursor.fetchone()[0]
             cursor.execute(
                 """SELECT nutrition_grade FROM aliments
                 WHERE id=%s""", (self.selected_prod_id,))

@@ -56,6 +56,7 @@ class OffApiData():
         Sends a request to the OFF API to receive a list of products
         within a specific category
         """
+        elem = str
         for cat_name in self.cat_list:
             for prod in range(0, CONST.NBR_PROD):
                 products_url = (
@@ -70,7 +71,8 @@ class OffApiData():
                 products = requests.get(products_url)
                 p_json = json.loads(products.content.decode('utf-8'))
                 self.product_name = p_json["products"][prod]["product_name_fr"]
-                self.nutriscore = p_json["products"][prod]["nutriscore_grade"]
+                if "nutriscore_grade" in p_json["products"][prod]:
+                    self.nutriscore = p_json["products"][prod]["nutriscore_grade"]
                 self.stores = p_json["products"][prod]["stores"]
                 self.url = p_json["products"][prod]["url"]
                 self.product.insert_product(self.product_name, self.nutriscore,
